@@ -2,10 +2,8 @@ name: Release
 
 on:
   push:
-    branches:
-      - main
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   build-and-release:
@@ -20,62 +18,62 @@ jobs:
             output_name: birthday-counter-windows.exe
           - os: macos-latest
             output_name: birthday-counter-macos
-    
+
     steps:
-    - uses: actions/checkout@v3
-    
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.10'
-    
-    - name: Install UPX (Ubuntu)
-      if: matrix.os == 'ubuntu-latest'
-      run: sudo apt-get install -y upx
+      - uses: actions/checkout@v3
 
-    - name: Install UPX (macOS)
-      if: matrix.os == 'macos-latest'
-      run: brew install upx
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
 
-    - name: Install UPX (Windows)
-      if: matrix.os == 'windows-latest'
-      run: |
-        curl -L -o upx.zip https://github.com/upx/upx/releases/download/v4.0.2/upx-4.0.2-win64.zip
-        7z e upx.zip */upx.exe -o"C:/Windows/System32"
-    
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        python -m pip install pyinstaller
-    
-    - name: Build executable
-      run: |
-        pyinstaller --onefile \
-                    --clean \
-                    --noupx \
-                    --strip \
-                    --exclude-module _ssl \
-                    --exclude-module _socket \
-                    --exclude-module _decimal \
-                    --exclude-module unittest \
-                    --exclude-module email \
-                    --exclude-module http \
-                    --exclude-module xmlrpc \
-                    --exclude-module pdb \
-                    main.py \
-                    -n ${{ matrix.output_name }}
-        upx --best --lzma dist/${{ matrix.output_name }}* || true
-    
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ matrix.output_name }}
-        path: dist/${{ matrix.output_name }}*
-    
-    - name: Create Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: dist/${{ matrix.output_name }}*
-        draft: false
-        prerelease: false
-        generate_release_notes: true
+      - name: Install UPX (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: sudo apt-get install -y upx
+
+      - name: Install UPX (macOS)
+        if: matrix.os == 'macos-latest'
+        run: brew install upx
+
+      - name: Install UPX (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          curl -L -o upx.zip https://github.com/upx/upx/releases/download/v4.0.2/upx-4.0.2-win64.zip
+          7z e upx.zip */upx.exe -o"C:/Windows/System32"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install pyinstaller
+
+      - name: Build executable
+        run: |
+          pyinstaller --onefile \
+                      --clean \
+                      --noupx \
+                      --strip \
+                      --exclude-module _ssl \
+                      --exclude-module _socket \
+                      --exclude-module _decimal \
+                      --exclude-module unittest \
+                      --exclude-module email \
+                      --exclude-module http \
+                      --exclude-module xmlrpc \
+                      --exclude-module pdb \
+                      main.py \
+                      -n ${{ matrix.output_name }}
+          upx --best --lzma dist/${{ matrix.output_name }}* || true
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ matrix.output_name }}
+          path: dist/${{ matrix.output_name }}*
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: dist/${{ matrix.output_name }}*
+          draft: false
+          prerelease: false
+          generate_release_notes: true
