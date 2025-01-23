@@ -48,20 +48,7 @@ jobs:
 
       - name: Build executable
         run: |
-          pyinstaller --onefile \
-                      --clean \
-                      --noupx \
-                      --strip \
-                      --exclude-module _ssl \
-                      --exclude-module _socket \
-                      --exclude-module _decimal \
-                      --exclude-module unittest \
-                      --exclude-module email \
-                      --exclude-module http \
-                      --exclude-module xmlrpc \
-                      --exclude-module pdb \
-                      main.py \
-                      -n ${{ matrix.output_name }}
+          pyinstaller --onefile --clean --noupx --strip --exclude-module _ssl --exclude-module _socket --exclude-module _decimal --exclude-module unittest --exclude-module email --exclude-module http --exclude-module xmlrpc --exclude-module pdb main.py -n ${{ matrix.output_name }}
           upx --best --lzma dist/${{ matrix.output_name }}* || true
 
       - name: Upload artifacts
