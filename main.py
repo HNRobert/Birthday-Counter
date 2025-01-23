@@ -25,19 +25,21 @@ def main():
         print("\nChoose an option:")
         print("1. Calculate how many days have passed since your birth.")
         print("2. Calculate the date after a certain number of days since your birth.")
-        choice = input("Enter 1 or 2: ")
+        print("3. Exit program")
+        choice = input("Enter 1, 2 or 3: ")
 
         if choice == "1":
             days = days_since_birth(birthday)
             print(f"You were born {days} days ago.")
-            break
         elif choice == "2":
             days_input = int(input("Enter the number of days to add: "))
             result_date = date_after_days(birthday, days_input)
             print(f"The date after {days_input} days is {result_date}.")
+        elif choice == "3":
+            print("Goodbye!")
             break
         else:
-            print("Invalid choice. Please enter 1 or 2.")
+            print("Invalid choice. Please enter 1, 2 or 3.")
 
 
 if __name__ == "__main__":
